@@ -32,6 +32,7 @@ export function AirportInput({
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [selectedDisplayValue, setSelectedDisplayValue] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
@@ -40,7 +41,9 @@ export function AirportInput({
   // Select an airport
   const selectAirport = useCallback(
     (airport: Airport) => {
-      setInputValue(`${airport.iataCode} - ${airport.cityName}`)
+      const display = `${airport.iataCode} - ${airport.cityName}`
+      setInputValue(display)
+      setSelectedDisplayValue(display)
       onChange(airport.iataCode, airport)
       setIsOpen(false)
       setSuggestions([])
@@ -53,6 +56,12 @@ export function AirportInput({
   useEffect(() => {
     async function fetchSuggestions() {
       if (debouncedValue.length < 2) {
+        setSuggestions([])
+        return
+      }
+
+      if (selectedDisplayValue && debouncedValue === selectedDisplayValue) {
+        setIsOpen(false)
         setSuggestions([])
         return
       }
@@ -77,7 +86,7 @@ export function AirportInput({
     }
 
     fetchSuggestions()
-  }, [debouncedValue])
+  }, [debouncedValue, selectedDisplayValue])
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
@@ -112,6 +121,10 @@ export function AirportInput({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     setInputValue(newValue)
+
+    if (selectedDisplayValue) {
+      setSelectedDisplayValue('')
+    }
 
     // Clear selection if input is manually edited
     if (value && !newValue.includes(value)) {
@@ -168,7 +181,7 @@ export function AirportInput({
           ref={listRef}
           className="absolute z-50 mt-1 w-full rounded-lg border bg-popover shadow-lg"
         >
-          <ScrollArea className="max-h-60">
+          <ScrollArea className="h-60">
             <ul className="p-1">
               {suggestions.map((airport, index) => (
                 <li key={airport.iataCode}>
@@ -182,7 +195,9 @@ export function AirportInput({
                         : 'hover:bg-muted'
                     )}
                   >
-                    <span className="font-mono text-xs font-semibold text-accent">
+                    <span
+                      className={`font-mono text-xs font-semibold ${index === selectedIndex ? 'text-accent-foreground' : 'text-accent'}`}
+                    >
                       {airport.iataCode}
                     </span>
                     <div className="flex-1">
