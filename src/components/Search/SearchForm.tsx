@@ -1,14 +1,9 @@
 import { useState, useCallback } from 'react'
 import { format } from 'date-fns'
-import { CalendarIcon, Search, ArrowRightLeft, Users, Plane } from 'lucide-react'
+import { Search, ArrowRightLeft, Users, Plane } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -24,6 +19,7 @@ import { validateSearchParams } from '@/utils/validators'
 import { CABIN_CLASS_OPTIONS } from '@/utils/constants'
 import type { SearchParams, CabinClass, Airport } from '@/types'
 import { cn } from '@/utils/cn'
+import { DatePicker } from './DatePicker'
 
 interface SearchFormProps {
   className?: string
@@ -51,17 +47,20 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
   const today = format(new Date(), 'yyyy-MM-dd')
 
   // Handle form field changes
-  const handleChange = useCallback((field: keyof SearchParams, value: string | number) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    // Clear error when field is changed
-    if (errors[field]) {
-      setErrors((prev) => {
-        const next = { ...prev }
-        delete next[field]
-        return next
-      })
-    }
-  }, [errors])
+  const handleChange = useCallback(
+    (field: keyof SearchParams, value: string | number) => {
+      setFormData((prev) => ({ ...prev, [field]: value }))
+      // Clear error when field is changed
+      if (errors[field]) {
+        setErrors((prev) => {
+          const next = { ...prev }
+          delete next[field]
+          return next
+        })
+      }
+    },
+    [errors]
+  )
 
   // Handle origin selection
   const handleOriginChange = (code: string, airport?: Airport) => {
@@ -170,53 +169,29 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
 
         {/* Dates and Options */}
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Departure Date */}
-          <div>
-            <Label htmlFor="departureDate" className="mb-1.5 block text-sm font-medium">
-              Departure
-            </Label>
-            <div className="relative">
-              <CalendarIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="departureDate"
-                type="date"
-                value={formData.departureDate || ''}
-                onChange={(e) => handleChange('departureDate', e.target.value)}
-                min={today}
-                className={cn(
-                  'pl-9',
-                  errors.departureDate && 'border-destructive focus-visible:ring-destructive'
-                )}
-              />
-            </div>
-            {errors.departureDate && (
-              <p className="mt-1 text-xs text-destructive">{errors.departureDate}</p>
-            )}
-          </div>
+          <DatePicker
+            id="departureDate"
+            label="Departure"
+            value={formData.departureDate || ''}
+            min={today}
+            error={errors.departureDate}
+            onChange={(next) => {
+              handleChange('departureDate', next)
+              if (formData.returnDate && next && formData.returnDate < next) {
+                handleChange('returnDate', '')
+              }
+            }}
+          />
 
-          {/* Return Date */}
-          <div>
-            <Label htmlFor="returnDate" className="mb-1.5 block text-sm font-medium">
-              Return <span className="text-muted-foreground">(optional)</span>
-            </Label>
-            <div className="relative">
-              <CalendarIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="returnDate"
-                type="date"
-                value={formData.returnDate || ''}
-                onChange={(e) => handleChange('returnDate', e.target.value)}
-                min={formData.departureDate || today}
-                className={cn(
-                  'pl-9',
-                  errors.returnDate && 'border-destructive focus-visible:ring-destructive'
-                )}
-              />
-            </div>
-            {errors.returnDate && (
-              <p className="mt-1 text-xs text-destructive">{errors.returnDate}</p>
-            )}
-          </div>
+          <DatePicker
+            id="returnDate"
+            label="Return"
+            optional
+            value={formData.returnDate || ''}
+            min={formData.departureDate || today}
+            error={errors.returnDate}
+            onChange={(next) => handleChange('returnDate', next)}
+          />
 
           {/* Passengers */}
           <div>

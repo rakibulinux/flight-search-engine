@@ -12,7 +12,14 @@ import {
   type PaginationState,
 } from '@tanstack/react-table'
 import { Plane, Search, AlertCircle } from 'lucide-react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
@@ -21,6 +28,7 @@ import { useFlightColumns } from './columns'
 import { TableSkeleton } from './TableSkeleton'
 import { TablePagination } from './TablePagination'
 import { ColumnVisibility } from './ColumnVisibility'
+import { FlightDetailsDialog } from './FlightDetailsDialog'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { STORAGE_KEYS, DEFAULT_PAGE_SIZE } from '@/utils/constants'
 import type { Flight } from '@/types'
@@ -42,6 +50,9 @@ export function DataTable({
   className,
 }: DataTableProps) {
   const columns = useFlightColumns()
+
+  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
 
   // Persist table layout
   const [columnVisibility, setColumnVisibility] = useLocalStorage<VisibilityState>(
@@ -96,7 +107,8 @@ export function DataTable({
         </div>
         <h3 className="mt-4 text-lg font-medium">No flights found</h3>
         <p className="mt-1 text-center text-sm text-muted-foreground max-w-md">
-          Search for flights to see results here. Try different dates or destinations for more options.
+          Search for flights to see results here. Try different dates or destinations for more
+          options.
         </p>
       </Card>
     )
@@ -180,6 +192,10 @@ export function DataTable({
                     key={row.id}
                     className="row-hover cursor-pointer"
                     data-state={row.getIsSelected() && 'selected'}
+                    onClick={() => {
+                      setSelectedFlight(row.original)
+                      setIsDetailsOpen(true)
+                    }}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
@@ -194,6 +210,15 @@ export function DataTable({
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
+        <FlightDetailsDialog
+          open={isDetailsOpen}
+          onOpenChange={(open) => {
+            setIsDetailsOpen(open)
+            if (!open) setSelectedFlight(null)
+          }}
+          flight={selectedFlight}
+        />
+
         {/* Pagination */}
         <div className="border-t px-4">
           <TablePagination
@@ -202,9 +227,7 @@ export function DataTable({
             pageCount={table.getPageCount()}
             totalItems={data.length}
             onPageChange={(page) => setPagination((prev) => ({ ...prev, pageIndex: page }))}
-            onPageSizeChange={(size) =>
-              setPagination({ pageIndex: 0, pageSize: size })
-            }
+            onPageSizeChange={(size) => setPagination({ pageIndex: 0, pageSize: size })}
           />
         </div>
       </Card>
