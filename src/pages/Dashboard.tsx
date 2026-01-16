@@ -4,7 +4,7 @@ import { Header, Footer } from '@/components/Layout'
 import { SearchForm, RecentSearches } from '@/components/Search'
 import { FilterPanel, MobileFilterDrawer } from '@/components/Filters'
 import { DataTable } from '@/components/DataTable'
-import { PriceChart, AirlinePriceChart } from '@/components/Charts'
+import { PriceChart, AirlinePriceChart, PriceTrendChart } from '@/components/Charts'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useSearch } from '@/contexts/SearchContext'
@@ -50,7 +50,8 @@ export function Dashboard() {
       // Stops filter
       if (filters.stops !== null) {
         if (filters.stops === 2) {
-          // 2+ stops: show all
+          // 2+ stops
+          if (flight.stops < 2) return false
         } else if (flight.stops > filters.stops) {
           return false
         }
@@ -190,6 +191,7 @@ export function Dashboard() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       <PriceChart flights={filteredFlights} />
                       <AirlinePriceChart flights={filteredFlights} />
+                      <PriceTrendChart flights={filteredFlights} />
                     </div>
                   </Card>
                 </div>
@@ -212,6 +214,7 @@ export function Dashboard() {
                       <>
                         <PriceChart flights={filteredFlights} />
                         <AirlinePriceChart flights={filteredFlights} />
+                        <PriceTrendChart flights={filteredFlights} />
                       </>
                     )}
                   </div>

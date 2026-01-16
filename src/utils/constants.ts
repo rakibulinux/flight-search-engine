@@ -38,7 +38,7 @@ export const STOP_OPTIONS = [
   { value: null, label: 'Any' },
   { value: 0, label: 'Nonstop only' },
   { value: 1, label: '1 stop or fewer' },
-  { value: 2, label: '2 stops or fewer' },
+  { value: 2, label: '2+ stops' },
 ]
 
 // Popular airlines (for display names)
