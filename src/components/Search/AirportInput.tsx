@@ -35,19 +35,23 @@ export function AirportInput({
   const [selectedDisplayValue, setSelectedDisplayValue] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
+  const requestIdRef = useRef(0)
 
   const debouncedValue = useDebounce(inputValue, 300)
 
   // Select an airport
   const selectAirport = useCallback(
     (airport: Airport) => {
+      requestIdRef.current += 1
       const display = `${airport.iataCode} - ${airport.cityName}`
       setInputValue(display)
       setSelectedDisplayValue(display)
       onChange(airport.iataCode, airport)
+      setIsLoading(false)
       setIsOpen(false)
       setSuggestions([])
       setSelectedIndex(-1)
+      inputRef.current?.blur()
     },
     [onChange]
   )
@@ -55,8 +59,19 @@ export function AirportInput({
   // Fetch suggestions
   useEffect(() => {
     async function fetchSuggestions() {
-      if (debouncedValue.length < 2) {
+      if (selectedDisplayValue && inputValue === selectedDisplayValue) {
+        setIsLoading(false)
+        setIsOpen(false)
         setSuggestions([])
+        setSelectedIndex(-1)
+        return
+      }
+
+      if (debouncedValue.length < 2) {
+        setIsLoading(false)
+        setIsOpen(false)
+        setSuggestions([])
+        setSelectedIndex(-1)
         return
       }
 
@@ -68,25 +83,40 @@ export function AirportInput({
 
       // Don't search if it looks like a selected IATA code
       if (/^[A-Z]{3}$/.test(debouncedValue)) {
+        setIsLoading(false)
+        setIsOpen(false)
+        setSuggestions([])
+        setSelectedIndex(-1)
         return
       }
 
+      const requestId = (requestIdRef.current += 1)
       setIsLoading(true)
       try {
         const results = await searchLocations(debouncedValue)
+
+        if (requestId !== requestIdRef.current) {
+          return
+        }
+
         setSuggestions(results)
         setIsOpen(results.length > 0)
         setSelectedIndex(-1)
       } catch (error) {
         console.error('Failed to fetch airport suggestions:', error)
+        if (requestId !== requestIdRef.current) {
+          return
+        }
         setSuggestions([])
       } finally {
-        setIsLoading(false)
+        if (requestId === requestIdRef.current) {
+          setIsLoading(false)
+        }
       }
     }
 
     fetchSuggestions()
-  }, [debouncedValue, selectedDisplayValue])
+  }, [debouncedValue, selectedDisplayValue, inputValue])
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
@@ -119,6 +149,7 @@ export function AirportInput({
 
   // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    requestIdRef.current += 1
     const newValue = e.target.value
     setInputValue(newValue)
 
