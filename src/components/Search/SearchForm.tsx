@@ -130,7 +130,12 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
   }
 
   return (
-    <Card className={cn('p-4 sm:p-6', className)}>
+    <Card
+      className={cn(
+        'p-4 sm:p-6 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10',
+        className
+      )}
+    >
       <form onSubmit={handleSubmit}>
         {/* Route Section */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr]">

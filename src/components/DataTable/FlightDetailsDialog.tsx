@@ -28,7 +28,7 @@ type FlightDetailsDialogProps = {
 
 function SegmentCard({ segment }: { segment: FlightSegment }) {
   return (
-    <div className="rounded-lg border bg-card p-4">
+    <div className="rounded-lg border bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ function SegmentCard({ segment }: { segment: FlightSegment }) {
 export function FlightDetailsDialog({ open, onOpenChange, flight }: FlightDetailsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0">
+      <DialogContent className="max-w-3xl p-0 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10">
         {flight ? (
           <div className="grid max-h-[85vh] grid-rows-[auto_1fr]">
             <DialogHeader className="px-6 pt-6">
@@ -207,7 +207,7 @@ export function FlightDetailsDialog({ open, onOpenChange, flight }: FlightDetail
                     </div>
                   </div>
 
-                  <div className="mt-3 rounded-lg border p-4">
+                  <div className="mt-3 rounded-lg border p-4 ">
                     <div className="text-xs text-muted-foreground">Traveler pricing</div>
                     <div className="mt-2 space-y-3">
                       {flight.raw.travelerPricings?.map((tp) => (
@@ -226,7 +226,7 @@ export function FlightDetailsDialog({ open, onOpenChange, flight }: FlightDetail
                             {tp.fareDetailsBySegment?.map((fd) => (
                               <div
                                 key={fd.segmentId}
-                                className="rounded-md border bg-background p-3"
+                                className="rounded-md border bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 p-3"
                               >
                                 <div className="text-xs text-muted-foreground">
                                   Segment {fd.segmentId}

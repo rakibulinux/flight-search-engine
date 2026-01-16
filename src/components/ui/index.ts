@@ -1,4 +1,5 @@
-export { Button, buttonVariants } from './button'
+export { Button } from './button'
+export { buttonVariants } from './button-variants'
 export { Input } from './input'
 export { Label } from './label'
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card'
@@ -46,7 +47,17 @@ export {
 } from './dropdown-menu'
 export { ScrollArea, ScrollBar } from './scroll-area'
 export { Separator } from './separator'
-export { Badge, badgeVariants } from './badge'
+export { Badge } from './badge'
+export { badgeVariants } from './badge-variants'
 export { Skeleton } from './skeleton'
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip'
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption } from './table'
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from './table'

@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTheme } from '@/contexts/ThemeContext'
+import { useTheme } from '@/contexts'
 import { cn } from '@/utils/cn'
 
 interface HeaderProps {
@@ -26,8 +26,8 @@ export function Header({ className }: HeaderProps) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-xl shadow-sm">
-            <img src="vite.svg" alt="Spotter Flight Search" />
+          <div className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-primary/15 to-accent/15 shadow-sm ring-1 ring-border">
+            <img src="vite.svg" alt="Spotter Flight Search" className="size-5" />
           </div>
           <div>
             <h1 className="text-lg font-semibold tracking-tight">Spotter Flight Search</h1>

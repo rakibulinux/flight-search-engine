@@ -37,6 +37,18 @@ export function AirportInput({
 
   const debouncedValue = useDebounce(inputValue, 300)
 
+  // Select an airport
+  const selectAirport = useCallback(
+    (airport: Airport) => {
+      setInputValue(`${airport.iataCode} - ${airport.cityName}`)
+      onChange(airport.iataCode, airport)
+      setIsOpen(false)
+      setSuggestions([])
+      setSelectedIndex(-1)
+    },
+    [onChange]
+  )
+
   // Fetch suggestions
   useEffect(() => {
     async function fetchSuggestions() {
@@ -93,23 +105,14 @@ export function AirportInput({
           break
       }
     },
-    [isOpen, suggestions, selectedIndex]
+    [isOpen, suggestions, selectedIndex, selectAirport]
   )
-
-  // Select an airport
-  const selectAirport = (airport: Airport) => {
-    setInputValue(`${airport.iataCode} - ${airport.cityName}`)
-    onChange(airport.iataCode, airport)
-    setIsOpen(false)
-    setSuggestions([])
-    setSelectedIndex(-1)
-  }
 
   // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     setInputValue(newValue)
-    
+
     // Clear selection if input is manually edited
     if (value && !newValue.includes(value)) {
       onChange('', undefined)
@@ -150,10 +153,7 @@ export function AirportInput({
           onFocus={() => suggestions.length > 0 && setIsOpen(true)}
           placeholder={placeholder}
           autoComplete="off"
-          className={cn(
-            'pl-9 pr-8',
-            error && 'border-destructive focus-visible:ring-destructive'
-          )}
+          className={cn('pl-9 pr-8', error && 'border-destructive focus-visible:ring-destructive')}
         />
         {isLoading && (
           <Loader2 className="absolute right-3 top-1/2 size-4 -translate-y-1/2 animate-spin text-muted-foreground" />

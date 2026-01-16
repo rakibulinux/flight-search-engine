@@ -101,6 +101,49 @@ export function Dashboard() {
 
       <main className="flex-1">
         <div className="container mx-auto px-3 py-4 sm:px-4 sm:py-6">
+          <section className="mb-6 sm:mb-8">
+            <Card className="overflow-hidden">
+              <div className="relative">
+                <div className="absolute inset-0 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10" />
+                <div className="relative p-4 sm:p-6">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="max-w-2xl">
+                      <div className="text-xs font-medium text-muted-foreground">
+                        Search smarter. Compare faster.
+                      </div>
+                      <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                        Find the best flights with price analytics
+                      </h2>
+                      <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+                        Explore routes, compare airlines, and use filters to narrow down the perfect
+                        itinerary.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      <div className="rounded-lg border bg-card/70 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-card/60">
+                        <div className="text-xs text-muted-foreground">Results</div>
+                        <div className="text-lg font-semibold leading-tight">{flights.length}</div>
+                      </div>
+                      <div className="rounded-lg border bg-card/70 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-card/60">
+                        <div className="text-xs text-muted-foreground">Airlines</div>
+                        <div className="text-lg font-semibold leading-tight">
+                          {availableAirlines.length}
+                        </div>
+                      </div>
+                      <div className="hidden sm:block rounded-lg border bg-card/70 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-card/60">
+                        <div className="text-xs text-muted-foreground">Active filters</div>
+                        <div className="text-lg font-semibold leading-tight">
+                          {activeFilterCount}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </section>
+
           {/* Search Section */}
           <section className="mb-6 sm:mb-8">
             <SearchForm />

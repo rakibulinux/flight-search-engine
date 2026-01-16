@@ -9,7 +9,12 @@ interface TableSkeletonProps {
 
 export function TableSkeleton({ rows = 5, columns = 8, className }: TableSkeletonProps) {
   return (
-    <div className={cn('w-full', className)}>
+    <div
+      className={cn(
+        'w-full bg-linear-to-br from-primary/12 via-accent/10 to-warning/10',
+        className
+      )}
+    >
       {/* Header skeleton */}
       <div className="flex gap-4 border-b px-4 py-3">
         {Array.from({ length: columns }).map((_, i) => (
@@ -19,10 +24,7 @@ export function TableSkeleton({ rows = 5, columns = 8, className }: TableSkeleto
 
       {/* Row skeletons */}
       {Array.from({ length: rows }).map((_, rowIndex) => (
-        <div
-          key={`row-${rowIndex}`}
-          className="flex items-center gap-4 border-b px-4 py-4"
-        >
+        <div key={`row-${rowIndex}`} className="flex items-center gap-4 border-b px-4 py-4">
           {/* Airline */}
           <div className="flex items-center gap-2">
             <Skeleton className="size-8 rounded" />

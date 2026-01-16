@@ -40,6 +40,30 @@ const COLORS = [
   'hsl(25, 95%, 53%)', // orange
 ]
 
+type TooltipRendererProps = {
+  active?: boolean
+  payload?: ReadonlyArray<{ payload?: unknown }>
+}
+
+function CustomTooltip({ active, payload }: TooltipRendererProps) {
+  const raw = payload?.[0]?.payload
+  if (!active || !raw) return null
+
+  const data = raw as AirlineData
+  return (
+    <div className="rounded-lg border bg-popover px-3 py-2 text-sm shadow-lg">
+      <div className="font-medium">{data.airlineName}</div>
+      <div className="mt-1 space-y-0.5 text-muted-foreground">
+        <div>Avg: {formatPrice(data.avgPrice)}</div>
+        <div>
+          Range: {formatPrice(data.minPrice)} – {formatPrice(data.maxPrice)}
+        </div>
+        <div>{data.count} flights</div>
+      </div>
+    </div>
+  )
+}
+
 export function AirlinePriceChart({ flights, className }: AirlinePriceChartProps) {
   // Process flight data by airline
   const chartData = useMemo<AirlineData[]>(() => {
@@ -72,26 +96,11 @@ export function AirlinePriceChart({ flights, className }: AirlinePriceChartProps
     return data.sort((a, b) => a.avgPrice - b.avgPrice).slice(0, 8)
   }, [flights])
 
-  // Custom tooltip
-  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: AirlineData }> }) => {
-    if (!active || !payload?.[0]) return null
-
-    const data = payload[0].payload
-    return (
-      <div className="rounded-lg border bg-popover px-3 py-2 text-sm shadow-lg">
-        <div className="font-medium">{data.airlineName}</div>
-        <div className="mt-1 space-y-0.5 text-muted-foreground">
-          <div>Avg: {formatPrice(data.avgPrice)}</div>
-          <div>Range: {formatPrice(data.minPrice)} – {formatPrice(data.maxPrice)}</div>
-          <div>{data.count} flights</div>
-        </div>
-      </div>
-    )
-  }
-
   if (flights.length === 0) {
     return (
-      <Card className={cn('', className)}>
+      <Card
+        className={cn('bg-linear-to-br from-primary/12 via-accent/10 to-warning/10', className)}
+      >
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">Price by Airline</CardTitle>
         </CardHeader>
@@ -105,14 +114,18 @@ export function AirlinePriceChart({ flights, className }: AirlinePriceChartProps
   }
 
   return (
-    <Card className={cn('', className)}>
+    <Card className={cn('bg-linear-to-br from-primary/12 via-accent/10 to-warning/10', className)}>
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-medium">Average Price by Airline</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+            <BarChart
+              data={chartData}
+              layout="vertical"
+              margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+            >
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
               <XAxis
                 type="number"
@@ -131,7 +144,7 @@ export function AirlinePriceChart({ flights, className }: AirlinePriceChartProps
                 className="fill-muted-foreground"
                 width={40}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={CustomTooltip} />
               <Bar dataKey="avgPrice" radius={[0, 4, 4, 0]} animationDuration={500}>
                 {chartData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

@@ -18,7 +18,7 @@ export function FlightCard({ flight, onClick, className }: FlightCardProps) {
   return (
     <Card
       className={cn(
-        'cursor-pointer p-4 transition-all hover:shadow-md active:scale-[0.99]',
+        'cursor-pointer p-4 transition-all hover:shadow-md active:scale-[0.99] bg-linear-to-br from-primary/12 via-accent/10 to-warning/10',
         className
       )}
       onClick={onClick}

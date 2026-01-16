@@ -45,7 +45,9 @@ export function PriceChart({ flights, className }: PriceChartProps) {
       const bucketMin = minPrice + i * bucketSize
       const bucketMax = minPrice + (i + 1) * bucketSize
       const flightsInBucket = flights.filter(
-        (f) => f.price >= bucketMin && (i === bucketCount - 1 ? f.price <= bucketMax : f.price < bucketMax)
+        (f) =>
+          f.price >= bucketMin &&
+          (i === bucketCount - 1 ? f.price <= bucketMax : f.price < bucketMax)
       )
 
       if (flightsInBucket.length > 0 || i === 0 || i === bucketCount - 1) {
@@ -62,12 +64,18 @@ export function PriceChart({ flights, className }: PriceChartProps) {
   }, [flights])
 
   // Custom tooltip
-  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: ChartDataPoint }> }) => {
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active?: boolean
+    payload?: Array<{ payload: ChartDataPoint }>
+  }) => {
     if (!active || !payload?.[0]) return null
 
     const data = payload[0].payload
     return (
-      <div className="rounded-lg border bg-popover px-3 py-2 text-sm shadow-lg">
+      <div className="rounded-lg border bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 px-3 py-2 text-sm shadow-lg">
         <div className="font-medium">{data.count} flights</div>
         <div className="text-muted-foreground">
           {formatPrice(data.minPrice)} – {formatPrice(data.maxPrice)}
@@ -78,7 +86,9 @@ export function PriceChart({ flights, className }: PriceChartProps) {
 
   if (flights.length === 0) {
     return (
-      <Card className={cn('', className)}>
+      <Card
+        className={cn('bg-linear-to-br from-primary/12 via-accent/10 to-warning/10', className)}
+      >
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">Price Distribution</CardTitle>
         </CardHeader>
@@ -92,7 +102,7 @@ export function PriceChart({ flights, className }: PriceChartProps) {
   }
 
   return (
-    <Card className={cn('', className)}>
+    <Card className={cn('bg-linear-to-br from-primary/12 via-accent/10 to-warning/10', className)}>
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-medium">Price Distribution</CardTitle>
       </CardHeader>

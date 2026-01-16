@@ -125,7 +125,12 @@ export function DataTable({
   // Render error state
   if (isError) {
     return (
-      <Card className={cn('flex flex-col items-center justify-center py-12 px-4', className)}>
+      <Card
+        className={cn(
+          'flex flex-col items-center justify-center py-12 px-4 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10',
+          className
+        )}
+      >
         <div className="flex size-14 items-center justify-center rounded-full bg-destructive/10">
           <AlertCircle className="size-7 text-destructive" />
         </div>
@@ -140,9 +145,14 @@ export function DataTable({
   // Render loading state
   if (isLoading) {
     return (
-      <Card className={cn('overflow-hidden', className)}>
+      <Card
+        className={cn(
+          'overflow-hidden bg-linear-to-br from-primary/12 via-accent/10 to-warning/10',
+          className
+        )}
+      >
         {/* Mobile: Card skeletons */}
-        <div className="block md:hidden p-4 space-y-3">
+        <div className="block md:hidden p-4 space-y-3 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10">
           {[1, 2, 3].map((i) => (
             <div key={i} className="skeleton h-32 rounded-lg" />
           ))}
@@ -157,9 +167,14 @@ export function DataTable({
 
   return (
     <TooltipProvider>
-      <Card className={cn('overflow-hidden', className)}>
+      <Card
+        className={cn(
+          'overflow-hidden bg-linear-to-br from-primary/12 via-accent/10 to-warning/10',
+          className
+        )}
+      >
         {/* Toolbar */}
-        <div className="flex items-center justify-between border-b bg-card/70 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-card/60 sm:px-4 sm:py-3">
+        <div className="flex items-center justify-between border-b bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-card/60 sm:px-4 sm:py-3">
           <div className="flex items-center gap-2">
             <Plane className="size-4 text-muted-foreground" />
             <span className="text-sm font-medium">

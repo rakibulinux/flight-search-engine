@@ -29,7 +29,9 @@ export function FilterPanel({
   className,
 }: FilterPanelProps) {
   return (
-    <Card className={cn('p-4', className)}>
+    <Card
+      className={cn('p-4 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10', className)}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Filter className="size-4 text-muted-foreground" />
@@ -55,10 +57,7 @@ export function FilterPanel({
 
       <div className="space-y-6">
         {/* Stops Filter */}
-        <StopsFilter
-          value={filters.stops}
-          onChange={(stops) => onFilterChange({ stops })}
-        />
+        <StopsFilter value={filters.stops} onChange={(stops) => onFilterChange({ stops })} />
 
         <Separator />
 
