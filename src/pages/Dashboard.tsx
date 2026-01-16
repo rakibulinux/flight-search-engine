@@ -101,7 +101,7 @@ export function Dashboard() {
 
       <main className="flex-1">
         <div className="container mx-auto px-3 py-4 sm:px-4 sm:py-6">
-          <section className="mb-6 sm:mb-8">
+          <section className="mb-6 sm:mb-8 animate-fade-up">
             <Card className="overflow-hidden">
               <div className="relative">
                 <div className="absolute inset-0 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10" />
@@ -145,7 +145,7 @@ export function Dashboard() {
           </section>
 
           {/* Search Section */}
-          <section className="mb-6 sm:mb-8">
+          <section className="mb-6 sm:mb-8 animate-fade-up">
             <SearchForm />
             <div className="mt-3 sm:mt-4">
               <RecentSearches />
@@ -186,7 +186,7 @@ export function Dashboard() {
               {/* Mobile Charts - Collapsible */}
               {showMobileCharts && hasResults && (
                 <div className="mb-4 lg:hidden">
-                  <Card className="p-3 sm:p-4">
+                  <Card className="p-3 sm:p-4 animate-fade-up">
                     <div className="grid gap-4 sm:grid-cols-2">
                       <PriceChart flights={filteredFlights} />
                       <AirlinePriceChart flights={filteredFlights} />
@@ -232,7 +232,7 @@ export function Dashboard() {
 
           {/* Empty State - Initial Load */}
           {!hasResults && !isSearching && !searchError && (
-            <section className="flex flex-col items-center justify-center py-12 sm:py-16 px-4">
+            <section className="flex flex-col items-center justify-center py-12 sm:py-16 px-4 animate-fade-up">
               <div className="max-w-md text-center">
                 <h2 className="text-xl sm:text-2xl font-semibold">Search for Flights</h2>
                 <p className="mt-2 text-sm sm:text-base text-muted-foreground">

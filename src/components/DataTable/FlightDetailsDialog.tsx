@@ -28,7 +28,7 @@ type FlightDetailsDialogProps = {
 
 function SegmentCard({ segment }: { segment: FlightSegment }) {
   return (
-    <div className="rounded-lg border bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 p-4">
+    <div className="rounded-lg border bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 p-4 animate-fade-up">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ function SegmentCard({ segment }: { segment: FlightSegment }) {
 export function FlightDetailsDialog({ open, onOpenChange, flight }: FlightDetailsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10">
+      <DialogContent className="max-w-3xl p-0 bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 animate-scale-in">
         {flight ? (
           <div className="grid max-h-[85vh] grid-rows-[auto_1fr]">
             <DialogHeader className="px-6 pt-6">

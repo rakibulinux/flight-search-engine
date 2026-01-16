@@ -46,6 +46,13 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
   // Get today's date for min date
   const today = format(new Date(), 'yyyy-MM-dd')
 
+  const originDisplayValue = originAirport
+    ? `${originAirport.iataCode} - ${originAirport.cityName}`
+    : ''
+  const destinationDisplayValue = destinationAirport
+    ? `${destinationAirport.iataCode} - ${destinationAirport.cityName}`
+    : ''
+
   // Handle form field changes
   const handleChange = useCallback(
     (field: keyof SearchParams, value: string | number) => {
@@ -142,7 +149,7 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
           <AirportInput
             id="origin"
             label="From"
-            value={formData.origin || ''}
+            value={originDisplayValue}
             placeholder="City or airport"
             error={errors.origin}
             onChange={handleOriginChange}
@@ -165,7 +172,7 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
           <AirportInput
             id="destination"
             label="To"
-            value={formData.destination || ''}
+            value={destinationDisplayValue}
             placeholder="City or airport"
             error={errors.destination}
             onChange={handleDestinationChange}

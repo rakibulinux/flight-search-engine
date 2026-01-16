@@ -39,6 +39,23 @@ export function AirportInput({
 
   const debouncedValue = useDebounce(inputValue, 300)
 
+  // Keep the internal input state in sync with the controlled value.
+  // This is important for programmatic updates (e.g. swapping origin/destination).
+  useEffect(() => {
+    // If the user is actively typing and the value is diverging, don't fight the user's input.
+    // We only sync when the parent value is different from what's shown.
+    if (value !== inputValue) {
+      requestIdRef.current += 1
+      setInputValue(value)
+      setSelectedDisplayValue(value)
+      setIsOpen(false)
+      setSuggestions([])
+      setSelectedIndex(-1)
+      setIsLoading(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value])
+
   // Select an airport
   const selectAirport = useCallback(
     (airport: Airport) => {

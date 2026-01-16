@@ -99,7 +99,10 @@ export function AirlinePriceChart({ flights, className }: AirlinePriceChartProps
   if (flights.length === 0) {
     return (
       <Card
-        className={cn('bg-linear-to-br from-primary/12 via-accent/10 to-warning/10', className)}
+        className={cn(
+          'bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 animate-fade-up',
+          className
+        )}
       >
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">Price by Airline</CardTitle>
@@ -114,7 +117,12 @@ export function AirlinePriceChart({ flights, className }: AirlinePriceChartProps
   }
 
   return (
-    <Card className={cn('bg-linear-to-br from-primary/12 via-accent/10 to-warning/10', className)}>
+    <Card
+      className={cn(
+        'bg-linear-to-br from-primary/12 via-accent/10 to-warning/10 animate-fade-up',
+        className
+      )}
+    >
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-medium">Average Price by Airline</CardTitle>
       </CardHeader>

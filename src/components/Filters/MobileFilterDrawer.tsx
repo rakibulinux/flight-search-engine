@@ -38,7 +38,10 @@ export function MobileFilterDrawer({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className={cn('gap-2', className)}>
+        <Button
+          variant="outline"
+          className={cn('gap-2 transition-all duration-200 hover:-translate-y-0.5', className)}
+        >
           <Filter className="size-4" />
           Filters
           {activeFilterCount > 0 && (
@@ -48,7 +51,7 @@ export function MobileFilterDrawer({
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-md py-10">
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-md py-10 animate-scale-in">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Filters</DialogTitle>
