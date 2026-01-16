@@ -1,9 +1,12 @@
-import { useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useState } from 'react'
+import { ChevronDown, ChevronUp, BarChart3 } from 'lucide-react'
 import { Header, Footer } from '@/components/Layout'
 import { SearchForm, RecentSearches } from '@/components/Search'
 import { FilterPanel, MobileFilterDrawer } from '@/components/Filters'
 import { DataTable } from '@/components/DataTable'
 import { PriceChart, AirlinePriceChart } from '@/components/Charts'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { useSearch } from '@/contexts/SearchContext'
 import { getHourFromDate } from '@/utils/formatters'
 import { DEFAULT_FILTERS } from '@/utils/constants'
@@ -11,6 +14,7 @@ import { DEFAULT_FILTERS } from '@/utils/constants'
 export function Dashboard() {
   const { state, dispatch } = useSearch()
   const { flights, isSearching, searchError, filters } = state
+  const [showMobileCharts, setShowMobileCharts] = useState(false)
 
   // Calculate available airlines from flights
   const availableAirlines = useMemo(() => {
@@ -95,81 +99,107 @@ export function Dashboard() {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
 
-      <main className="container mx-auto flex-1 px-4 py-6">
-        {/* Search Section */}
-        <section className="mb-8">
-          <SearchForm />
-          <div className="mt-4">
-            <RecentSearches />
-          </div>
-        </section>
-
-        {/* Results Section */}
-        {(hasResults || isSearching || searchError) && (
-          <section>
-            {/* Mobile Filter Button */}
-            <div className="mb-4 lg:hidden">
-              <MobileFilterDrawer
-                filters={filters}
-                availableAirlines={availableAirlines}
-                priceRange={priceRange}
-                activeFilterCount={activeFilterCount}
-                onFilterChange={handleFilterChange}
-                onReset={handleFilterReset}
-              />
+      <main className="flex-1">
+        <div className="container mx-auto px-3 py-4 sm:px-4 sm:py-6">
+          {/* Search Section */}
+          <section className="mb-6 sm:mb-8">
+            <SearchForm />
+            <div className="mt-3 sm:mt-4">
+              <RecentSearches />
             </div>
+          </section>
 
-            <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-              {/* Sidebar Filters (Desktop) */}
-              <aside className="hidden lg:block">
-                <div className="sticky top-6 space-y-6">
-                  <FilterPanel
-                    filters={filters}
-                    availableAirlines={availableAirlines}
-                    priceRange={priceRange}
-                    activeFilterCount={activeFilterCount}
-                    onFilterChange={handleFilterChange}
-                    onReset={handleFilterReset}
-                  />
-
-                  {/* Charts */}
-                  <PriceChart flights={filteredFlights} />
-                  <AirlinePriceChart flights={filteredFlights} />
-                </div>
-              </aside>
-
-              {/* Main Content */}
-              <div className="space-y-6">
-                {/* Mobile Charts */}
-                <div className="grid gap-4 sm:grid-cols-2 lg:hidden">
-                  <PriceChart flights={filteredFlights} />
-                  <AirlinePriceChart flights={filteredFlights} />
-                </div>
-
-                {/* Flight Table */}
-                <DataTable
-                  data={filteredFlights}
-                  isLoading={isSearching}
-                  isError={!!searchError}
-                  errorMessage={searchError || undefined}
+          {/* Results Section */}
+          {(hasResults || isSearching || searchError) && (
+            <section>
+              {/* Mobile Controls */}
+              <div className="flex flex-wrap items-center gap-2 mb-4 lg:hidden">
+                <MobileFilterDrawer
+                  filters={filters}
+                  availableAirlines={availableAirlines}
+                  priceRange={priceRange}
+                  activeFilterCount={activeFilterCount}
+                  onFilterChange={handleFilterChange}
+                  onReset={handleFilterReset}
                 />
+                {hasResults && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowMobileCharts(!showMobileCharts)}
+                    className="gap-2"
+                  >
+                    <BarChart3 className="size-4" />
+                    Analytics
+                    {showMobileCharts ? (
+                      <ChevronUp className="size-4" />
+                    ) : (
+                      <ChevronDown className="size-4" />
+                    )}
+                  </Button>
+                )}
               </div>
-            </div>
-          </section>
-        )}
 
-        {/* Empty State - Initial Load */}
-        {!hasResults && !isSearching && !searchError && (
-          <section className="flex flex-col items-center justify-center py-16">
-            <div className="max-w-md text-center">
-              <h2 className="text-2xl font-semibold">Search for Flights</h2>
-              <p className="mt-2 text-muted-foreground">
-                Enter your origin, destination, and travel dates to find the best flight deals.
-                Use filters to narrow down results by price, stops, and airlines.
-              </p>
-            </div>
-          </section>
-        )}
+              {/* Mobile Charts - Collapsible */}
+              {showMobileCharts && hasResults && (
+                <div className="mb-4 lg:hidden">
+                  <Card className="p-3 sm:p-4">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <PriceChart flights={filteredFlights} />
+                      <AirlinePriceChart flights={filteredFlights} />
+                    </div>
+                  </Card>
+                </div>
+              )}
+
+              <div className="grid gap-4 lg:gap-6 lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr]">
+                {/* Sidebar Filters (Desktop) */}
+                <aside className="hidden lg:block">
+                  <div className="sticky top-4 space-y-4">
+                    <FilterPanel
+                      filters={filters}
+                      availableAirlines={availableAirlines}
+                      priceRange={priceRange}
+                      activeFilterCount={activeFilterCount}
+                      onFilterChange={handleFilterChange}
+                      onReset={handleFilterReset}
+                    />
+                    {/* Charts */}
+                    {hasResults && (
+                      <>
+                        <PriceChart flights={filteredFlights} />
+                        <AirlinePriceChart flights={filteredFlights} />
+                      </>
+                    )}
+                  </div>
+                </aside>
+
+                {/* Main Content - Flight Table/Cards */}
+                <div className="min-w-0">
+                  <DataTable
+                    data={filteredFlights}
+                    isLoading={isSearching}
+                    isError={!!searchError}
+                    errorMessage={searchError || undefined}
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Empty State - Initial Load */}
+          {!hasResults && !isSearching && !searchError && (
+            <section className="flex flex-col items-center justify-center py-12 sm:py-16 px-4">
+              <div className="max-w-md text-center">
+                <h2 className="text-xl sm:text-2xl font-semibold">Search for Flights</h2>
+                <p className="mt-2 text-sm sm:text-base text-muted-foreground">
+                  Enter your origin, destination, and travel dates to find the best flight deals.
+                  Use filters to narrow down results.
+                </p>
+              </div>
+            </section>
+          )}
+        </div>
       </main>
 
       <Footer />

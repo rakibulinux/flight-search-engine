@@ -33,18 +33,24 @@ export function TablePagination({
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems)
 
   return (
-    <div className={cn('flex items-center justify-between gap-4 py-4', className)}>
-      {/* Items info */}
-      <div className="text-sm text-muted-foreground">
-        Showing <span className="font-medium text-foreground">{startItem}</span> –{' '}
-        <span className="font-medium text-foreground">{endItem}</span> of{' '}
-        <span className="font-medium text-foreground">{totalItems}</span> results
+    <div className={cn('flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-4', className)}>
+      {/* Items info - Hidden on very small screens, simplified on mobile */}
+      <div className="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
+        <span className="hidden xs:inline">Showing </span>
+        <span className="font-medium text-foreground">{startItem}</span>
+        <span className="hidden xs:inline"> – </span>
+        <span className="xs:hidden">-</span>
+        <span className="font-medium text-foreground">{endItem}</span>
+        <span className="hidden xs:inline"> of </span>
+        <span className="xs:hidden"> / </span>
+        <span className="font-medium text-foreground">{totalItems}</span>
+        <span className="hidden sm:inline"> results</span>
       </div>
 
       {/* Controls */}
-      <div className="flex items-center gap-4">
-        {/* Page size selector */}
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center gap-2 sm:gap-4">
+        {/* Page size selector - Hidden on mobile */}
+        <div className="hidden sm:flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Rows:</span>
           <Select
             value={pageSize.toString()}
@@ -64,8 +70,10 @@ export function TablePagination({
         </div>
 
         {/* Page info */}
-        <div className="text-sm text-muted-foreground">
-          Page <span className="font-medium text-foreground">{pageIndex + 1}</span> of{' '}
+        <div className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
+          Page <span className="font-medium text-foreground">{pageIndex + 1}</span>
+          <span className="hidden xs:inline"> of </span>
+          <span className="xs:hidden">/</span>
           <span className="font-medium text-foreground">{pageCount || 1}</span>
         </div>
 
@@ -76,6 +84,7 @@ export function TablePagination({
             size="icon-sm"
             onClick={() => onPageChange(0)}
             disabled={pageIndex === 0}
+            className="hidden xs:flex"
           >
             <ChevronsLeft className="size-4" />
             <span className="sr-only">First page</span>
@@ -103,6 +112,7 @@ export function TablePagination({
             size="icon-sm"
             onClick={() => onPageChange(pageCount - 1)}
             disabled={pageIndex >= pageCount - 1}
+            className="hidden xs:flex"
           >
             <ChevronsRight className="size-4" />
             <span className="sr-only">Last page</span>

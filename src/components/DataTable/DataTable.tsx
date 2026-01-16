@@ -11,7 +11,7 @@ import {
   type VisibilityState,
   type PaginationState,
 } from '@tanstack/react-table'
-import { Plane, Search, AlertCircle } from 'lucide-react'
+import { Plane, Search, AlertCircle, LayoutGrid, LayoutList } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -21,13 +21,14 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
-
+import { Button } from '@/components/ui/button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { useFlightColumns } from './columns'
 import { TableSkeleton } from './TableSkeleton'
 import { TablePagination } from './TablePagination'
 import { ColumnVisibility } from './ColumnVisibility'
+import { FlightCard } from './FlightCard'
 import { FlightDetailsDialog } from './FlightDetailsDialog'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { STORAGE_KEYS, DEFAULT_PAGE_SIZE } from '@/utils/constants'
@@ -53,6 +54,7 @@ export function DataTable({
 
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [viewMode, setViewMode] = useLocalStorage<'table' | 'cards'>('flight-search-view-mode', 'table')
 
   // Persist table layout
   const [columnVisibility, setColumnVisibility] = useLocalStorage<VisibilityState>(
@@ -98,17 +100,19 @@ export function DataTable({
     columnResizeMode: 'onChange',
   })
 
+  // Get paginated data for card view
+  const paginatedData = table.getRowModel().rows.map((row) => row.original)
+
   // Render empty state
   if (!isLoading && data.length === 0 && !isError) {
     return (
-      <Card className={cn('flex flex-col items-center justify-center py-16', className)}>
-        <div className="flex size-16 items-center justify-center rounded-full bg-muted">
-          <Search className="size-8 text-muted-foreground" />
+      <Card className={cn('flex flex-col items-center justify-center py-12 px-4', className)}>
+        <div className="flex size-14 items-center justify-center rounded-full bg-muted">
+          <Search className="size-7 text-muted-foreground" />
         </div>
-        <h3 className="mt-4 text-lg font-medium">No flights found</h3>
-        <p className="mt-1 text-center text-sm text-muted-foreground max-w-md">
-          Search for flights to see results here. Try different dates or destinations for more
-          options.
+        <h3 className="mt-4 text-lg font-medium text-center">No flights found</h3>
+        <p className="mt-1 text-center text-sm text-muted-foreground max-w-sm">
+          Search for flights to see results here. Try different dates or destinations.
         </p>
       </Card>
     )
@@ -117,12 +121,12 @@ export function DataTable({
   // Render error state
   if (isError) {
     return (
-      <Card className={cn('flex flex-col items-center justify-center py-16', className)}>
-        <div className="flex size-16 items-center justify-center rounded-full bg-destructive/10">
-          <AlertCircle className="size-8 text-destructive" />
+      <Card className={cn('flex flex-col items-center justify-center py-12 px-4', className)}>
+        <div className="flex size-14 items-center justify-center rounded-full bg-destructive/10">
+          <AlertCircle className="size-7 text-destructive" />
         </div>
-        <h3 className="mt-4 text-lg font-medium">Something went wrong</h3>
-        <p className="mt-1 text-center text-sm text-muted-foreground max-w-md">
+        <h3 className="mt-4 text-lg font-medium text-center">Something went wrong</h3>
+        <p className="mt-1 text-center text-sm text-muted-foreground max-w-sm">
           {errorMessage || 'Failed to load flight results. Please try again.'}
         </p>
       </Card>
@@ -133,7 +137,16 @@ export function DataTable({
   if (isLoading) {
     return (
       <Card className={cn('overflow-hidden', className)}>
-        <TableSkeleton rows={5} />
+        {/* Mobile: Card skeletons */}
+        <div className="block md:hidden p-4 space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="skeleton h-32 rounded-lg" />
+          ))}
+        </div>
+        {/* Desktop: Table skeleton */}
+        <div className="hidden md:block">
+          <TableSkeleton rows={5} />
+        </div>
       </Card>
     )
   }
@@ -142,73 +155,136 @@ export function DataTable({
     <TooltipProvider>
       <Card className={cn('overflow-hidden', className)}>
         {/* Toolbar */}
-        <div className="flex items-center justify-between border-b px-4 py-3">
+        <div className="flex items-center justify-between border-b px-3 py-2 sm:px-4 sm:py-3">
           <div className="flex items-center gap-2">
             <Plane className="size-4 text-muted-foreground" />
             <span className="text-sm font-medium">
-              {data.length} flight{data.length !== 1 ? 's' : ''} found
+              {data.length} flight{data.length !== 1 ? 's' : ''}
             </span>
           </div>
-          <ColumnVisibility table={table} />
+          <div className="flex items-center gap-2">
+            {/* View Mode Toggle - Only on tablet and up */}
+            <div className="hidden sm:flex items-center border rounded-md">
+              <Button
+                variant={viewMode === 'cards' ? 'secondary' : 'ghost'}
+                size="icon-sm"
+                onClick={() => setViewMode('cards')}
+                className="rounded-r-none"
+              >
+                <LayoutGrid className="size-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'secondary' : 'ghost'}
+                size="icon-sm"
+                onClick={() => setViewMode('table')}
+                className="rounded-l-none"
+              >
+                <LayoutList className="size-4" />
+              </Button>
+            </div>
+            {/* Column visibility - Only in table view */}
+            {viewMode === 'table' && (
+              <div className="hidden lg:block">
+                <ColumnVisibility table={table} />
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Table */}
-        <ScrollArea className="relative">
-          <div className="min-w-[800px]">
-            <Table>
-              <TableHeader className="sticky top-0 z-10 bg-card">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} className="hover:bg-transparent">
-                    {headerGroup.headers.map((header) => (
-                      <TableHead
-                        key={header.id}
-                        style={{ width: header.getSize() }}
-                        className="relative"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
-                        {/* Column resize handle */}
-                        {header.column.getCanResize() && (
-                          <div
-                            onMouseDown={header.getResizeHandler()}
-                            onTouchStart={header.getResizeHandler()}
-                            className={cn(
-                              'absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none',
-                              header.column.getIsResizing()
-                                ? 'bg-accent'
-                                : 'bg-transparent hover:bg-border'
-                            )}
-                          />
-                        )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    className="row-hover cursor-pointer"
-                    data-state={row.getIsSelected() && 'selected'}
+        {/* Mobile: Always Cards View */}
+        <div className="block md:hidden">
+          <div className="p-3 space-y-3">
+            {paginatedData.map((flight) => (
+              <FlightCard
+                key={flight.id}
+                flight={flight}
+                onClick={() => {
+                  setSelectedFlight(flight)
+                  setIsDetailsOpen(true)
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Tablet/Desktop: Switchable View */}
+        <div className="hidden md:block">
+          {viewMode === 'cards' ? (
+            // Cards Grid View
+            <div className="p-4">
+              <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+                {paginatedData.map((flight) => (
+                  <FlightCard
+                    key={flight.id}
+                    flight={flight}
                     onClick={() => {
-                      setSelectedFlight(row.original)
+                      setSelectedFlight(flight)
                       setIsDetailsOpen(true)
                     }}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                  />
                 ))}
-              </TableBody>
-            </Table>
-          </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+              </div>
+            </div>
+          ) : (
+            // Table View
+            <ScrollArea className="relative">
+              <div className="min-w-[800px]">
+                <Table>
+                  <TableHeader className="sticky top-0 z-10 bg-card">
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                        {headerGroup.headers.map((header) => (
+                          <TableHead
+                            key={header.id}
+                            style={{ width: header.getSize() }}
+                            className="relative"
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(header.column.columnDef.header, header.getContext())}
+                            {/* Column resize handle */}
+                            {header.column.getCanResize() && (
+                              <div
+                                onMouseDown={header.getResizeHandler()}
+                                onTouchStart={header.getResizeHandler()}
+                                className={cn(
+                                  'absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none',
+                                  header.column.getIsResizing()
+                                    ? 'bg-accent'
+                                    : 'bg-transparent hover:bg-border'
+                                )}
+                              />
+                            )}
+                          </TableHead>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableHeader>
+                  <TableBody>
+                    {table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        className="row-hover cursor-pointer"
+                        data-state={row.getIsSelected() && 'selected'}
+                        onClick={() => {
+                          setSelectedFlight(row.original)
+                          setIsDetailsOpen(true)
+                        }}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          )}
+        </div>
 
         <FlightDetailsDialog
           open={isDetailsOpen}
@@ -220,7 +296,7 @@ export function DataTable({
         />
 
         {/* Pagination */}
-        <div className="border-t px-4">
+        <div className="border-t px-3 sm:px-4">
           <TablePagination
             pageIndex={pagination.pageIndex}
             pageSize={pagination.pageSize}

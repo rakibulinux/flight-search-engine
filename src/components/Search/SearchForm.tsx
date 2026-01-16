@@ -203,7 +203,7 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
                 <Button
                   id="adults"
                   variant="outline"
-                  className="w-full justify-start gap-2 font-normal"
+                  className="w-full justify-start gap-2 font-normal cursor-pointer"
                 >
                   <Users className="size-4 text-muted-foreground" />
                   {formData.adults} Adult{formData.adults !== 1 ? 's' : ''}
@@ -214,6 +214,7 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
                   <span className="text-sm">Adults</span>
                   <div className="flex items-center gap-2">
                     <Button
+                      className="cursor-pointer"
                       type="button"
                       variant="outline"
                       size="icon-sm"
@@ -226,6 +227,7 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
                     </Button>
                     <span className="w-6 text-center font-medium">{formData.adults}</span>
                     <Button
+                      className="cursor-pointer"
                       type="button"
                       variant="outline"
                       size="icon-sm"
@@ -251,12 +253,12 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
               value={formData.cabinClass}
               onValueChange={(value) => handleChange('cabinClass', value as CabinClass)}
             >
-              <SelectTrigger id="cabinClass">
+              <SelectTrigger id="cabinClass" className="cursor-pointer">
                 <SelectValue placeholder="Select class" />
               </SelectTrigger>
               <SelectContent>
                 {CABIN_CLASS_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem key={option.value} value={option.value} className="cursor-pointer">
                     {option.label}
                   </SelectItem>
                 ))}
@@ -271,7 +273,7 @@ export function SearchForm({ className, onSearch }: SearchFormProps) {
             type="submit"
             variant="accent"
             size="lg"
-            className="w-full gap-2 sm:w-auto"
+            className="w-full gap-2 sm:w-auto cursor-pointer"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

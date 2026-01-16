@@ -7,6 +7,7 @@ A modern, professional Flight Search Engine built with React, TypeScript, and th
 ## 🚀 Features
 
 ### Core Features
+
 - **Flight Search** - Search flights with autocomplete airport input, date selection, and passenger configuration
 - **Advanced Data Table** - Powered by TanStack Table with:
   - Client-side sorting
@@ -24,6 +25,7 @@ A modern, professional Flight Search Engine built with React, TypeScript, and th
   - Price range (dual slider)
 
 ### Bonus Features
+
 - ✅ **Dark Mode** - System preference detection with manual toggle
 - ✅ **Persistent Table Layout** - Column visibility saved to localStorage
 - ✅ **Column Visibility Toggle** - Show/hide columns as needed
@@ -31,6 +33,7 @@ A modern, professional Flight Search Engine built with React, TypeScript, and th
 - ✅ **Recent Searches** - Quick access to previous searches
 
 ### UX Enhancements
+
 - Smooth animations and transitions
 - Keyboard-friendly navigation
 - Inline form validation
@@ -40,18 +43,18 @@ A modern, professional Flight Search Engine built with React, TypeScript, and th
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | React 19 + Vite |
-| Language | TypeScript |
+| Category   | Technology                      |
+| ---------- | ------------------------------- |
+| Framework  | React 19 + Vite                 |
+| Language   | TypeScript                      |
 | UI Library | shadcn/ui (Radix UI primitives) |
-| Styling | Tailwind CSS v4 |
-| Icons | Lucide React |
-| Charts | Recharts |
-| Tables | TanStack React Table v8 |
-| State | React Hooks + Context |
-| API | Amadeus Self-Service API |
-| Linting | ESLint + Prettier |
+| Styling    | Tailwind CSS v4                 |
+| Icons      | Lucide React                    |
+| Charts     | Recharts                        |
+| Tables     | TanStack React Table v8         |
+| State      | React Hooks + Context           |
+| API        | Amadeus Self-Service API        |
+| Linting    | ESLint + Prettier               |
 
 ## 📁 Project Structure
 
@@ -87,53 +90,60 @@ src/
 
 ### Color Palette (Spotter.ai Inspired)
 
-| Role | Light | Dark |
-|------|-------|------|
+| Role       | Light     | Dark      |
+| ---------- | --------- | --------- |
 | Background | `#F8FAFC` | `#0F172A` |
-| Card | `#FFFFFF` | `#1E293B` |
-| Primary | `#1E293B` | `#F1F5F9` |
-| Accent | `#6366F1` | `#818CF8` |
-| Success | `#22C55E` | `#4ADE80` |
-| Warning | `#F59E0B` | `#FBBF24` |
+| Card       | `#FFFFFF` | `#1E293B` |
+| Primary    | `#1E293B` | `#F1F5F9` |
+| Accent     | `#6366F1` | `#008080` |
+| Success    | `#22C55E` | `#4ADE80` |
+| Warning    | `#F59E0B` | `#FBBF24` |
 
 ### Typography
+
 - **Sans-serif**: Inter (Google Fonts)
 - **Monospace**: JetBrains Mono (for prices)
 
 ## 🏃 Getting Started
 
 ### Prerequisites
-- Node.js 18+
+
+- Node.js 20+
 - npm or yarn
 - Amadeus API credentials (free test account)
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd flight-search-engine
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment**
+
    ```bash
    cp .env.example .env
    ```
-   
+
    Add your Amadeus API credentials:
+
    ```env
    VITE_AMADEUS_API_KEY=your_api_key
    VITE_AMADEUS_API_SECRET=your_api_secret
    ```
-   
+
    Get your credentials at: https://developers.amadeus.com/
 
 4. **Start development server**
+
    ```bash
    npm run dev
    ```
@@ -153,24 +163,28 @@ npm run preview
 ## 📖 Architecture Decisions
 
 ### Why TanStack Table?
+
 - Headless UI allows complete styling control
 - Built-in support for sorting, pagination, column visibility
 - TypeScript-first API
 - Zero dependencies beyond React
 
 ### Why Recharts?
+
 - Declarative SVG charts
 - Responsive containers
 - Smooth animations
 - Easy customization with CSS
 
 ### Why Context over Redux?
+
 - Simpler mental model for this scale
 - No action boilerplate
 - Built into React (no dependencies)
 - Sufficient for local state management
 
 ### Why Debounced Filters?
+
 - Prevents excessive re-renders
 - Smoother UX when using sliders
 - Reduces API calls for server-side filtering

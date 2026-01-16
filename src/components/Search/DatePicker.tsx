@@ -79,7 +79,7 @@ export function DatePicker({ id, label, value, onChange, min, error, optional }:
             type="button"
             variant="outline"
             className={cn(
-              'w-full justify-start gap-2 font-normal',
+              'w-full justify-start gap-2 font-normal cursor-pointer',
               !value && 'text-muted-foreground',
               error && 'border-destructive focus-visible:ring-destructive'
             )}
@@ -156,7 +156,7 @@ export function DatePicker({ id, label, value, onChange, min, error, optional }:
                   onClick={() => handleSelect(day)}
                   className={cn(
                     'h-9 rounded-md text-sm transition-colors',
-                    'hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    'hover:bg-accent hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                     outside && 'text-muted-foreground/60',
                     disabled && 'cursor-not-allowed opacity-40 hover:bg-transparent',
                     selected && 'bg-primary text-primary-foreground hover:bg-primary/90'
