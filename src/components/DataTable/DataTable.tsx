@@ -54,7 +54,10 @@ export function DataTable({
 
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
-  const [viewMode, setViewMode] = useLocalStorage<'table' | 'cards'>('flight-search-view-mode', 'table')
+  const [viewMode, setViewMode] = useLocalStorage<'table' | 'cards'>(
+    'flight-search-view-mode',
+    'table'
+  )
 
   // Persist table layout
   const [columnVisibility, setColumnVisibility] = useLocalStorage<VisibilityState>(
@@ -79,6 +82,7 @@ export function DataTable({
   }, [data.length])
 
   // Create table instance
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
@@ -155,7 +159,7 @@ export function DataTable({
     <TooltipProvider>
       <Card className={cn('overflow-hidden', className)}>
         {/* Toolbar */}
-        <div className="flex items-center justify-between border-b px-3 py-2 sm:px-4 sm:py-3">
+        <div className="flex items-center justify-between border-b bg-card/70 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-card/60 sm:px-4 sm:py-3">
           <div className="flex items-center gap-2">
             <Plane className="size-4 text-muted-foreground" />
             <span className="text-sm font-medium">
@@ -230,7 +234,7 @@ export function DataTable({
             <ScrollArea className="relative">
               <div className="min-w-[800px]">
                 <Table>
-                  <TableHeader className="sticky top-0 z-10 bg-card">
+                  <TableHeader className="sticky top-0 z-10 bg-card/80 backdrop-blur supports-backdrop-filter:bg-card/70">
                     {table.getHeaderGroups().map((headerGroup) => (
                       <TableRow key={headerGroup.id} className="hover:bg-transparent">
                         {headerGroup.headers.map((header) => (

@@ -1,4 +1,4 @@
-import { Moon, Sun, Monitor, Plane } from 'lucide-react'
+import { Moon, Sun, Monitor } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -17,15 +17,20 @@ export function Header({ className }: HeaderProps) {
   const { setTheme } = useTheme()
 
   return (
-    <header className={cn('border-b bg-card', className)}>
+    <header
+      className={cn(
+        'sticky top-0 z-40 border-b bg-card/80 backdrop-blur supports-backdrop-filter:bg-card/70',
+        className
+      )}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-lg bg-accent">
-            <Plane className="size-5 text-accent-foreground" />
+          <div className="flex size-9 items-center justify-center rounded-xl shadow-sm">
+            <img src="vite.svg" alt="Spotter Flight Search" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight">FlightSearch</h1>
+            <h1 className="text-lg font-semibold tracking-tight">Spotter Flight Search</h1>
             <p className="text-xs text-muted-foreground">Powered by Amadeus</p>
           </div>
         </div>

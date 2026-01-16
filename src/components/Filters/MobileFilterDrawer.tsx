@@ -48,7 +48,7 @@ export function MobileFilterDrawer({
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-md">
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-md py-10">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Filters</DialogTitle>
@@ -62,10 +62,7 @@ export function MobileFilterDrawer({
 
         <div className="space-y-6 py-4">
           {/* Stops Filter */}
-          <StopsFilter
-            value={filters.stops}
-            onChange={(stops) => onFilterChange({ stops })}
-          />
+          <StopsFilter value={filters.stops} onChange={(stops) => onFilterChange({ stops })} />
 
           <Separator />
 
